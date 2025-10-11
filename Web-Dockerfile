@@ -1,0 +1,22 @@
+# Use the official image as the base
+FROM <Your web image>
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package files first to leverage Docker layer caching
+COPY .....
+COPY .....
+
+# Install dependencies
+RUN .....
+
+# Copy the rest of the application code
+COPY . /app
+
+# The port your application runs on
+EXPOSE <port to access web>
+
+# Set the command to start the application 
+CMD .....
+

@@ -1,0 +1,34 @@
+﻿version: '3.8'
+
+services:
+  waf-nginx:
+    build:
+      context: ./waf-nginx-modsec-crs
+      dockerfile: Dockerfile
+    container_name: waf-nginx-crs
+    ports:
+      - "8080:8080"   # แก้จากเดิมที่เป็น "80:8080"
+      # - "8443:8443" # ถ้าจะใช้ https ค่อยเปิด
+    networks:
+      - backnet
+      - frontnet
+    volumes:
+      - ./logs/modsec_audit.log:/var/log/modsec_audit.log
+      - ./logs/modsec_error.log:/var/log/modsec_error.log
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web-server
+      dockerfile: Dockerfile
+    container_name: web-server
+    networks:
+      - backnet
+
+networks:
+  backnet:
+    driver: bridge
+    internal: true
+  frontnet:
+    driver: bridge
+

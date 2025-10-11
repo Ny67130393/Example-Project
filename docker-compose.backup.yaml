@@ -1,0 +1,19 @@
+services:
+  waf-nginx:
+    build:
+      context: ./waf-nginx-modsec-crs
+      dockerfile: Dockerfile
+    container_name: waf-nginx-crs
+    ports:
+      - "8080:80"
+    networks:
+      - backnet
+      - frontnet
+    environment:
+      - BACKEND=http://web:80      # <-- ชี้ไป service "web" พอร์ต 80
+      - SERVERNAME=localhost
+      - MODSEC_RULE_ENGINE=DetectionOnly
+    volumes:
+      - ./logs/modsec_audit.log:/var/log/modsec_audit.log
+      - ./logs/modsec_error.log:/var/log/modsec_error.log
+    restart: unless-stopped
